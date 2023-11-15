@@ -1,0 +1,24 @@
+# Configuration for Cog
+build:
+  gpu: true
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+  python_version: "3.8"
+  python_packages:
+    - "torch==2.0.0"
+    - "diffusers==0.22.1"
+    - "transformers==4.35.0"
+    - "accelerate==0.24.1"
+    - "einops==0.7.0"
+    - "mediapipe==0.10.2"
+    - "opencv-python>=4.1.0.25"
+    - "git+https://github.com/tencent-ailab/IP-Adapter.git"
+
+  run:
+    - git clone https://github.com/tencent-ailab/IP-Adapter.git /IP-Adapter
+    - cd /IP-Adapter && mkdir models
+    - cd /IP-Adapter/models && wget https://huggingface.co/h94/IP-Adapter/resolve/main/models/ip-adapter_sd15.bin
+   
+# predict.py defines how predictions are run on your model
+predict: "predict.py:Predictor"

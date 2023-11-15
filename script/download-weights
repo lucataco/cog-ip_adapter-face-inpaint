@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+import os
+import sys
+import torch
+from diffusers import DDIMScheduler, StableDiffusionPipeline, AutoencoderKL
+
+# append project directory to path so predict.py can be imported
+sys.path.append('.')
+
+from predict import base_model_path, vae_model_path
+
+# Make cache folder
+if not os.path.exists("model-cache"):
+    os.makedirs("model-cache")
+
+if not os.path.exists("vae-cache"):
+    os.makedirs("vae-cache")
+
+if not os.path.exists("image_encoder"):
+    os.makedirs("image_encoder")
+
+noise_scheduler = DDIMScheduler(
+    num_train_timesteps=1000,
+    beta_start=0.00085,
+    beta_end=0.012,
+    beta_schedule="scaled_linear",
+    clip_sample=False,
+    set_alpha_to_one=False,
+    steps_offset=1,
+)
+
+# Download SDXL-VAE-FP16-Fix
+vae = AutoencoderKL.from_pretrained(
+    vae_model_path,
+    cache_dir="vae-cache"
+)
+
+pipe = StableDiffusionPipeline.from_pretrained(
+    base_model_path,
+    torch_dtype=torch.float16,
+    scheduler=noise_scheduler,
+    vae=vae,
+    feature_extractor=None,
+    safety_checker=None,
+    cache_dir="model-cache"
+)
+
+
+# Download image_encoder files
+os.system("wget -O image_encoder/config.json https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/config.json")
+os.system("wget -O image_encoder/model.safetensors https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/model.safetensors")
+os.system("wget -O image_encoder/pytorch_model.bin https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/pytorch_model.bin")
