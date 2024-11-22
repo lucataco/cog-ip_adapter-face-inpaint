@@ -1,5 +1,7 @@
 # tencent-ailab / IP-Adapter
 
+[![Try a demo on Replicate](https://replicate.com/lucataco/ip_adapter-face-inpaint/badge)](https://replicate.com/lucataco/ip_adapter-face-inpaint)
+
 This is an implementation of a face-inpaint method [tencent-ailab / IP-Adapter](https://github.com/tencent-ailab/IP-Adapter) as a Cog model. [Cog packages machine learning models as standard containers.](https://github.com/replicate/cog)
 
 First, download the pre-trained weights:
